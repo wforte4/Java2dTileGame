@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="BackboneEngine">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/jars/BackboneEngine.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
