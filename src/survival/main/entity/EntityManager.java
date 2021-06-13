@@ -15,6 +15,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import backbone.engine.main.BackboneVector2f;
 import survival.main.Main;
 import survival.main.drops.Jem;
+import survival.main.entity.creatures.Creature;
+import survival.main.entity.creatures.Player;
 import survival.main.entity.still.EntityStill;
 import survival.main.world.WorldText;
 
@@ -41,6 +43,8 @@ public class EntityManager {
 		return Float.compare(f1, f2);
 	};
 	private Rectangle renderBounds;
+
+	private Player player;
 	
 	public EntityManager() {
 		entities = new CopyOnWriteArrayList<Entity>();
@@ -63,6 +67,12 @@ public class EntityManager {
 				entity.setAlive(false);
 				if(loaded_entities.contains(entity)) {
 					loaded_entities.remove(entity);
+				}
+			}
+			if(entity instanceof Creature) {
+				// Check if the player is attacking enemies
+				if(player.isAttacking() && player.getBounds().intersects(entity)) {
+					((Creature) entity).damageEntity(20);
 				}
 			}
 			entity.tick();
@@ -129,6 +139,14 @@ public class EntityManager {
 	 */
 	public CopyOnWriteArrayList<Entity> getEntities() {
 		return entities;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 
 }

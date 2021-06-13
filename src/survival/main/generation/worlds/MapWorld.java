@@ -48,7 +48,7 @@ public class MapWorld extends World {
 		BufferedImage map = BackboneImageLoader.loadImage(path);
 		this.width = map.getWidth();
 		this.height = map.getHeight();
-		light_map = new LightMap(this, false, 20);
+		light_map = new LightMap(this, true, 30);
 		light_map.addLight(new Light(400, 400, 400, 0x000000));
 		
 		for(int x = 0; x < map.getWidth(); x++) {

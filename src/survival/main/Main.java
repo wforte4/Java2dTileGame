@@ -27,9 +27,9 @@ public class Main {
 	public static final int HEIGHT = WIDTH / 16 * 9;
 	
 	public static void main(String[] args) {
-		BackboneWindow window = new BackboneWindow("Survival", WIDTH, HEIGHT);
+		BackboneWindow window = new BackboneWindow("Java 2d Tile Game", WIDTH, HEIGHT);
 		window.setResizable(true);
-		SurvivalGameLoop game = new SurvivalGameLoop(window, "Survival", WIDTH, HEIGHT);
+		SurvivalGameLoop game = new SurvivalGameLoop(window, "The Diner", WIDTH, HEIGHT);
 		game.start();
 	}
 

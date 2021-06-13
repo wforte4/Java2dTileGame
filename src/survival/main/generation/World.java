@@ -89,6 +89,7 @@ public abstract class World {
 	public World setPlayer(Player player) {
 		this.player = player;
 		addEntity(player);
+		entity_manager.setPlayer(player);
 		return this;
 	}
 	

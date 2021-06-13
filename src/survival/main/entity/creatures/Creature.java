@@ -8,10 +8,11 @@
  */
 package survival.main.entity.creatures;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 
 import backbone.engine.main.BackboneAnimation;
 import backbone.engine.main.BackboneSprite;
+import survival.main.Main;
 import survival.main.drops.Jem;
 import survival.main.entity.Entity;
 import survival.main.generation.World;
@@ -52,6 +53,7 @@ public abstract class Creature extends Entity {
 	protected boolean down;
 	protected boolean right;
 	protected boolean left;
+
 	protected boolean attacking;
 	protected boolean push;
 	protected boolean peaceful_movement;
@@ -88,6 +90,7 @@ public abstract class Creature extends Entity {
 		acceleration = DEFAULT_ACCELERATION;
 		max_speed = DEFAULT_MAX_SPEED;
 		peaceful_movement_change = DEFAULT_PEACEFUL_MOVEMENT_CHANGE;
+		health = 100;
 	}
 	
 	protected void animationControl() {
@@ -373,7 +376,12 @@ public abstract class Creature extends Entity {
 	 */
 	@Override
 	public void render(Graphics2D g) {
-		
+		if(this instanceof Player == false) {
+			g.setColor(Color.BLACK);
+			g.fillRect((int) pos.getWorldLocation().xpos - 2, (int) pos.getWorldLocation().ypos - 2, 54, 8);
+			g.setColor(Color.RED);
+			g.fillRect((int) pos.getWorldLocation().xpos , (int) pos.getWorldLocation().ypos, health / 2, 4);
+		}
 	}
 
 	/**
@@ -417,7 +425,25 @@ public abstract class Creature extends Entity {
 	public int getStrength() {
 		return strength;
 	}
-	
-	
 
+
+	public boolean isAttacking() {
+		return attacking;
+	}
+
+	public void setAttacking(boolean attacking) {
+		this.attacking = attacking;
+	}
+	
+	public void damageEntity(int amount) {
+		this.health = health - amount;
+	}
+
+	public int getDirection() {
+		return direction;
+	}
+
+	public void setDirection(int direction) {
+		this.direction = direction;
+	}
 }

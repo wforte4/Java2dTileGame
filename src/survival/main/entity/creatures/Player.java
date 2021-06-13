@@ -52,7 +52,7 @@ public class Player extends Creature {
 	public Player(World world, float xpos, float ypos, int width, int height) {
 		super(world, xpos, ypos, width, height);
 		world_position_fix = new BackboneVector2f();
-		acerbia_bar = new GrowthBar(Main.WIDTH - 150, 75, 50, 200, 2000);
+		acerbia_bar = new GrowthBar(Main.WIDTH - 80, 75, 50, 200, 2000);
 		acerbia_bar.setFullAmount(10000);
 		jem_magnet = new MagnetJem(this);
 		gui = new GUI(this);

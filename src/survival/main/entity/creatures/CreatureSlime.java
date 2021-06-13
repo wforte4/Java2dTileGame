@@ -73,7 +73,6 @@ public class CreatureSlime extends Creature {
 		checkCollisions();
 		animationControl();
 		peacefulMovement();
-		tickParticleElementManager();
 		move();
 		smoothMove();
 	}
