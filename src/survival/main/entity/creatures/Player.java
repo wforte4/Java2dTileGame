@@ -85,6 +85,7 @@ public class Player extends Creature {
 		super.tick();
 		acerbia_bar.tick();
 		jem_magnet.tick();
+		gui.tick();
 		world_position_fix.xpos = pos.xpos + world.worldxpos;
 		world_position_fix.ypos = pos.ypos + world.worldypos;
 		sort_y = pos.ypos;
@@ -97,11 +98,11 @@ public class Player extends Creature {
 		tickParticleElementManager();
 		collectJems();
 	}
-	
-	public void move() {	
+
+	public void move() {
 		world.worldypos -= speed_up;
 		world.worldypos += speed_down;
-		world.worldxpos += speed_right;		
+		world.worldxpos += speed_right;
 		world.worldxpos -= speed_left;
 		if(up) {			
 			direction = 0;
@@ -136,7 +137,7 @@ public class Player extends Creature {
 			world.getEntity_manager().dropJem(world_position_fix, new Random().nextInt(300));
 		}
 		if(k == KeyEvent.VK_SHIFT) {
-			attackInDirection(direction, 9, 300);
+			attackInDirection(direction, 6, 300);
 		}
 		if(k == KeyEvent.VK_D) {
 			right = true;

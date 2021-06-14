@@ -28,9 +28,9 @@ public class Main {
 	
 	public static void main(String[] args) {
 		BackboneWindow window = new BackboneWindow("Java 2d Tile Game", WIDTH, HEIGHT);
-		window.setResizable(true);
 		SurvivalGameLoop game = new SurvivalGameLoop(window, "The Diner", WIDTH, HEIGHT);
 		game.start();
+		window.setVisible(true);
 	}
 
 }

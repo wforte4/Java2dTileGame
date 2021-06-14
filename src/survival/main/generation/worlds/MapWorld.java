@@ -12,7 +12,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.Date;
 
+import backbone.engine.main.BackboneGameStateManager;
 import backbone.engine.main.BackboneImageLoader;
 import survival.main.drops.Jem;
 import survival.main.entity.Entity;
@@ -37,13 +39,14 @@ import survival.main.light.LightMap;
 
 public class MapWorld extends World {
 	
-	public MapWorld(String path) {
+	public MapWorld(BackboneGameStateManager gsm, String path) {
+		super(gsm);
 		loadMap(path);
 		for(int i = 0; i < 10; i++) {
 			entity_manager.addEntity(new CreatureSlime(this, 200, 200, 48, 48));
 		}
 	}
-	
+
 	public void loadMap(String path) {
 		BufferedImage map = BackboneImageLoader.loadImage(path);
 		this.width = map.getWidth();
@@ -141,6 +144,7 @@ public class MapWorld extends World {
 			menu.addLine("World Block Amount: " + block_manager.getBlocks().size());
 			menu.addLine("Loaded Blocks: " + block_manager.getLoaded_blocks().size());
 			menu.addLine("Entities: " + entity_manager.getEntities().size());
+			menu.addLine("Time of Day: " + light_map.getSunlightCounter() + " / " + light_map.getMaxSunlightCounter());
 			menu.render(g);
 		}
 	}

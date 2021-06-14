@@ -49,7 +49,7 @@ public abstract class Entity extends Rectangle {
 	protected int bounds_width;
 	protected int bounds_height;
 	protected boolean sortable;
-	protected boolean isAlive;
+	protected boolean isInsideRenderField;
 	protected Point left_up,
 					left_down,
 					right_up,
@@ -233,9 +233,9 @@ public abstract class Entity extends Rectangle {
 		return width;
 	}
 
-	public boolean isAlive() { return isAlive; }
-	public void setAlive(boolean alive) {
-		this.isAlive = alive;
+	public boolean isInsideRenderField() { return isInsideRenderField; }
+	public void setInsideRenderField(boolean insideRenderField) {
+		this.isInsideRenderField = insideRenderField;
 	}
 	
 	public World getCurrentWorld() {

@@ -98,4 +98,11 @@ public class BlockManager {
 		return loaded_blocks;
 	}
 
+	public Rectangle getRenderBounds() {
+		return renderBounds;
+	}
+
+	public void setRenderBounds(Rectangle renderBounds) {
+		this.renderBounds = renderBounds;
+	}
 }

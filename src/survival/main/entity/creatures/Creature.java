@@ -37,7 +37,7 @@ public abstract class Creature extends Entity {
 	public static final float DEFAULT_PEACEFUL_MOVEMENT_CHANGE = 30;
 	
 	protected int direction;
-	protected int health;
+	protected int health = 100;
 	protected int strength;
 	protected float max_speed;
 	protected float acceleration;
@@ -46,7 +46,7 @@ public abstract class Creature extends Entity {
 	protected float push_down;
 	protected float push_left;
 	protected float push_right;
-	protected float push_cellerator;
+	protected float push_excelerator;
 	protected float peaceful_movement_counter;
 	protected float peaceful_movement_change;
 	protected boolean up;
@@ -57,6 +57,7 @@ public abstract class Creature extends Entity {
 	protected boolean attacking;
 	protected boolean push;
 	protected boolean peaceful_movement;
+	public boolean isDead = false;
 	
 	protected BackboneAnimation anim_walk_up;
 	protected BackboneAnimation anim_walk_down;
@@ -152,28 +153,28 @@ public abstract class Creature extends Entity {
 		if(push) {
 			if(push_up > 0) {
 				speed_up += push_up;
-				push_up -= push_cellerator;
+				push_up -= push_excelerator;
 			} else {
 				push_up = 0;
 				push = false;
 			}
 			if(push_down > 0) {
 				speed_down += push_down;
-				push_down -= push_cellerator;
+				push_down -= push_excelerator;
 			} else {
 				push_down = 0;
 				push = false;
 			}
 			if(push_right > 0) {
 				speed_right += push_right;
-				push_right -= push_cellerator;
+				push_right -= push_excelerator;
 			} else {
 				push_right = 0;
 				push = false;
 			}
 			if(push_left > 0) {
 				speed_left += push_left;
-				push_left -= push_cellerator;
+				push_left -= push_excelerator;
 			} else {
 				push_left = 0;
 				push = false;
@@ -185,7 +186,7 @@ public abstract class Creature extends Entity {
 	
 	public void pushInDirection(int direction, float force) {
 		push = true;
-		push_cellerator = 2;
+		push_excelerator = 2;
 		push_up = 0;
 		push_right = 0;
 		push_down = 0;
@@ -384,6 +385,19 @@ public abstract class Creature extends Entity {
 		}
 	}
 
+	public boolean isAttacking() {
+		return attacking;
+	}
+
+	public void damageEntity(int amount) {
+		if((this.health - amount) > 0) {
+			this.health = health - amount;
+		} else {
+			this.health = 0;
+			this.isDead = true;
+		}
+	}
+
 	/**
 	 * @return the speed_right
 	 */
@@ -426,17 +440,8 @@ public abstract class Creature extends Entity {
 		return strength;
 	}
 
-
-	public boolean isAttacking() {
-		return attacking;
-	}
-
 	public void setAttacking(boolean attacking) {
 		this.attacking = attacking;
-	}
-	
-	public void damageEntity(int amount) {
-		this.health = health - amount;
 	}
 
 	public int getDirection() {

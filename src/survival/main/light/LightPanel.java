@@ -60,9 +60,9 @@ public class LightPanel {
 				}
 			}
 			if(map.hasSunlight()) {
-				totaltran -= getPercent(map.getSunlight_counter(), map.getMax_sunlight_counter(), 1);
+				totaltran -= getPercent(map.getSunlightCounter(), map.getMaxSunlightCounter(), 1);
 			}
-			if(totallights == 0) totaltran = 1 - getPercent(map.getSunlight_counter(), map.getMax_sunlight_counter(), 1);
+			if(totallights == 0) totaltran = 1 - getPercent(map.getSunlightCounter(), map.getMaxSunlightCounter(), 1);
 			if(totaltran > 1) totaltran = 1;
 			if(totaltran < 0) totaltran = 0;
 			transparency = totaltran;

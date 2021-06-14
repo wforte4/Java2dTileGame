@@ -12,6 +12,7 @@ import java.awt.*;
 import java.util.Comparator;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import backbone.engine.main.BackboneGameStateManager;
 import backbone.engine.main.BackboneVector2f;
 import survival.main.Main;
 import survival.main.drops.Jem;
@@ -28,6 +29,8 @@ import survival.main.world.WorldText;
  * Time Created: 9:45:10 AM
  * Project: Survival
  * Package: survival.main.entity
+ * Details:
+ * 	This file contains the core of management of entities. It will be checking to see if entities are on screen and if to load them
  */
 
 public class EntityManager {
@@ -45,13 +48,15 @@ public class EntityManager {
 	private Rectangle renderBounds;
 
 	private Player player;
+	private BackboneGameStateManager gsm;
 	
-	public EntityManager() {
+	public EntityManager(BackboneGameStateManager gsm) {
 		entities = new CopyOnWriteArrayList<Entity>();
 		loaded_entities = new CopyOnWriteArrayList<Entity>();
 		still_entities = new CopyOnWriteArrayList<EntityStill>();
 		jems = new CopyOnWriteArrayList<Jem>();
 		world_texts = new CopyOnWriteArrayList<WorldText>();
+		this.gsm = gsm;
 
 		renderBounds = new Rectangle(0, 0, Main.WIDTH + 300, Main.HEIGHT + 300);
 	}
@@ -59,20 +64,29 @@ public class EntityManager {
 	public void tick() {
 		for(Entity entity: entities) {
 			if(renderBounds.intersects(entity)) {
-				entity.setAlive(true);
+				entity.setInsideRenderField(true);
 				if(!loaded_entities.contains(entity)) {
 					loaded_entities.add(entity);
 				}
 			} else {
-				entity.setAlive(false);
+				entity.setInsideRenderField(false);
 				if(loaded_entities.contains(entity)) {
 					loaded_entities.remove(entity);
 				}
 			}
+			/* @Creature type Entities Only */
 			if(entity instanceof Creature) {
 				// Check if the player is attacking enemies
 				if(player.isAttacking() && player.getBounds().intersects(entity)) {
-					((Creature) entity).damageEntity(20);
+					if(entity instanceof Player == false) ((Creature) entity).damageEntity(20);
+				}
+				if(((Creature) entity).isDead == true) {
+					if(entity instanceof Player) {
+
+					} else {
+						if(loaded_entities.contains(entity)) { loaded_entities.remove(entity); }
+						if(entities.contains(entity)) { entities.remove(entity); }
+					}
 				}
 			}
 			entity.tick();

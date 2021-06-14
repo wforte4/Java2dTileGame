@@ -6,41 +6,49 @@ import java.util.ArrayList;
 import survival.main.generation.World;
 
 public class LightMap {
-	
+
+	// List of light panels
 	private ArrayList<LightPanel> panels;
 	private ArrayList<Light> lights;
-	protected int sunlight_counter = 0;
-	protected int max_sunlight_counter = 20000;
+
+	// Counting the sun
+	protected int sunlightCounter = 0;
+	protected int maxSunlightCounter = 86400 / 2;
+	protected int daylightSpeed = 2;
 	private boolean sunlight = false;
 	private boolean rising = true;
 	private boolean falling = false;
-	
+
+	// Initialize the light map
 	public LightMap(World world, boolean sunlight, int panelSize) {
 		this.sunlight = sunlight;
 		panels = new ArrayList<LightPanel>();
 		lights = new ArrayList<Light>();
 		generateLightPanels(world, panelSize);
 	}
-	
+
+	// Initialize Light map for random generation world
 	public LightMap(int width, int height, boolean sunlight, int panelSize) {
 		this.sunlight = sunlight;
 		panels = new ArrayList<LightPanel>();
 		lights = new ArrayList<Light>();
 		generateLightPanels(width, height, panelSize);
 	}
-	
-	public void generateLightPanels(int width, int height, int size) {
-		for(int y = 0; y < height / size + 1; y++) {
-			for(int x = 0; x < width / size + 1; x++) {
-				panels.add(new LightPanel(this,  x * size, y * size, size));
-			}
-		}
-	}
-	
+
+	// Load the proper amount of light panels for world
 	public void generateLightPanels(World world, int size) {
 		for(int y = 0; y < world.getIntegerHeight() / size + 1; y++) {
 			for(int x = 0; x < world.getIntegerWidth() / size + 1; x++) {
 				panels.add(new LightPanel(this, world, x * size, y * size, size));
+			}
+		}
+	}
+
+	// Load the proper amount of light panels
+	public void generateLightPanels(int width, int height, int size) {
+		for(int y = 0; y < height / size + 1; y++) {
+			for(int x = 0; x < width / size + 1; x++) {
+				panels.add(new LightPanel(this,  x * size, y * size, size));
 			}
 		}
 	}
@@ -58,25 +66,28 @@ public class LightMap {
 	}
 	
 	public void updateSun() {
+		// If the sun is rising
 		if(rising) {	
-			if(sunlight_counter < max_sunlight_counter) {					 
-				sunlight_counter+= 2;
+			if(sunlightCounter < maxSunlightCounter) {
+				sunlightCounter += daylightSpeed;
 			} else {
-				sunlight_counter = max_sunlight_counter;
+				sunlightCounter = maxSunlightCounter;
 				falling = true;
 				rising = false;
 			}
 		}
+
+		// Past noon (the sun is falling)
 		if(falling) {
-			if(sunlight_counter > 0) {
-				sunlight_counter-= 2;
+			if(sunlightCounter > 0) {
+				sunlightCounter -= daylightSpeed;
 			} else {
-				sunlight_counter = 0;
+				sunlightCounter = 0;
 				rising = true;
 				falling = false;
 			}
 		}
-		if(sunlight_counter < max_sunlight_counter / 2) {			
+		if(sunlightCounter < maxSunlightCounter / 2) {
 			for(Light light: lights) {
 				light.fadeIn(true);
 				light.fadeOut(false);
@@ -113,12 +124,12 @@ public class LightMap {
 		return sunlight;
 	}
 	
-	public int getMax_sunlight_counter() {
-		return max_sunlight_counter;
+	public int getMaxSunlightCounter() {
+		return maxSunlightCounter;
 	}
 	
-	public int getSunlight_counter() {
-		return sunlight_counter;
+	public int getSunlightCounter() {
+		return sunlightCounter;
 	}
 
 }

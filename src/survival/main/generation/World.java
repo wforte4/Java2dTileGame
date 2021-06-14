@@ -11,6 +11,7 @@ package survival.main.generation;
 import java.awt.Graphics2D;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import backbone.engine.main.BackboneGameStateManager;
 import backbone.engine.main.BackboneVector2f;
 import survival.main.debug.DebugMenu;
 import survival.main.entity.Entity;
@@ -43,9 +44,9 @@ public abstract class World {
 	public float worldxpos;
 	public float worldypos;
 	
-	public World() {
+	public World(BackboneGameStateManager gsm) {
 		block_manager = new BlockManager();
-		entity_manager = new EntityManager();
+		entity_manager = new EntityManager(gsm);
 		menu = new DebugMenu(new BackboneVector2f(50, 50));
 	}
 	
@@ -131,7 +132,8 @@ public abstract class World {
 	public EntityManager getEntity_manager() {
 		return entity_manager;
 	}
-	
+
+
 	/**
 	 * @return the menu
 	 */

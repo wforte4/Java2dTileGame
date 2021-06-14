@@ -11,6 +11,7 @@ package survival.main.generation.worlds;
 import java.awt.Graphics2D;
 import java.util.Random;
 
+import backbone.engine.main.BackboneGameStateManager;
 import survival.main.generation.Block;
 import survival.main.generation.BlockType;
 import survival.main.generation.World;
@@ -27,7 +28,8 @@ import survival.main.generation.World;
 
 public class RandomWorld extends World {
 	
-	public RandomWorld(int width, int height) {
+	public RandomWorld(BackboneGameStateManager gsm, int width, int height) {
+		super(gsm);
 		this.width = width;
 		this.height = height;
 		loadWorld();
