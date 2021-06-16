@@ -38,9 +38,11 @@ import survival.main.ui.bar.GrowthBar;
 public class Player extends Creature {
 	
 	public BackboneVector2f world_position_fix;
-	private GrowthBar acerbia_bar;
+	private GrowthBar experienceBar;
 	private GUI gui;
 	private MagnetJem jem_magnet;
+
+	protected int currentDamageAmount = 2;
 
 	/**
 	 * @param world
@@ -52,14 +54,15 @@ public class Player extends Creature {
 	public Player(World world, float xpos, float ypos, int width, int height) {
 		super(world, xpos, ypos, width, height);
 		world_position_fix = new BackboneVector2f();
-		acerbia_bar = new GrowthBar(Main.WIDTH - 80, 75, 50, 200, 2000);
-		acerbia_bar.setFullAmount(10000);
+		experienceBar = new GrowthBar(Main.WIDTH - 80, 75, 50, 200, 2000);
+		experienceBar.setFullAmount(10000);
 		jem_magnet = new MagnetJem(this);
 		gui = new GUI(this);
 		pos.xpos = Main.WIDTH / 2 - width / 2;
 		pos.ypos = Main.HEIGHT / 2 - height / 2;
 		element = Element.FIRE;
-		jem_collection = new JemCollection(this, acerbia_bar);
+		jem_collection = new JemCollection(this, experienceBar);
+		this.health = 100;
 		setAnimations(180, 4);
 		world.addLight(new Light(this, 300, 0x000000));
 	}
@@ -83,7 +86,7 @@ public class Player extends Creature {
 	@Override
 	public void tick() {
 		super.tick();
-		acerbia_bar.tick();
+		experienceBar.tick();
 		jem_magnet.tick();
 		gui.tick();
 		world_position_fix.xpos = pos.xpos + world.worldxpos;
@@ -93,8 +96,8 @@ public class Player extends Creature {
 		checkCollisions();
 		move();
 		smoothMove();
-		push();
-		animationControl();
+		checkIfDamaged();
+		animateEntity();
 		tickParticleElementManager();
 		collectJems();
 	}
@@ -216,8 +219,8 @@ public class Player extends Creature {
 	/**
 	 * @return the acerbia_bar
 	 */
-	public GrowthBar getAcerbia_bar() {
-		return acerbia_bar;
+	public GrowthBar getExperienceBar() {
+		return experienceBar;
 	}
 	
 	public World getCurrentWorld() {
@@ -236,6 +239,14 @@ public class Player extends Creature {
 	 */
 	public MagnetJem getJem_magnet() {
 		return jem_magnet;
+	}
+
+	public int getCurrentDamageAmount() {
+		return currentDamageAmount;
+	}
+
+	public void setCurrentDamageAmount(int currentDamageAmount) {
+		this.currentDamageAmount = currentDamageAmount;
 	}
 
 }

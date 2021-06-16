@@ -71,10 +71,11 @@ public class CreatureSlime extends Creature {
 		setSolidWorldBounds(0, 10);
 		setBlockCollisionBounds(pos.getWorldLocation().xpos, pos.getWorldLocation().ypos + bounds_height / 2, bounds_width, bounds_height / 2);
 		checkCollisions();
-		animationControl();
+		animateEntity();
 		peacefulMovement();
 		move();
 		smoothMove();
+		checkIfDamaged();
 	}
 	
 

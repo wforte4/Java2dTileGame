@@ -45,7 +45,7 @@ public class StateGame extends BackboneGameState {
 	 */
 	@Override
 	public void init() {
-		world = new MapWorld(gsm,"/worlds/map_diner.png");
+		world = new MapWorld(gsm, "/worlds/map_diner.png");
 		player = new Player(world, 140, 140, 70, 70);
 		world.setPlayer(player);
 	}

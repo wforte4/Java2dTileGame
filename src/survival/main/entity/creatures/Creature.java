@@ -12,7 +12,6 @@ import java.awt.*;
 
 import backbone.engine.main.BackboneAnimation;
 import backbone.engine.main.BackboneSprite;
-import survival.main.Main;
 import survival.main.drops.Jem;
 import survival.main.entity.Entity;
 import survival.main.generation.World;
@@ -37,8 +36,12 @@ public abstract class Creature extends Entity {
 	public static final float DEFAULT_PEACEFUL_MOVEMENT_CHANGE = 30;
 	
 	protected int direction;
-	protected int health = 100;
+	protected float health;
+	protected float fullHealth = 10;
+	protected int healthBarWidth = 50;
 	protected int strength;
+	protected int hurtCounter;
+
 	protected float max_speed;
 	protected float acceleration;
 	protected float current_speed;
@@ -49,14 +52,16 @@ public abstract class Creature extends Entity {
 	protected float push_excelerator;
 	protected float peaceful_movement_counter;
 	protected float peaceful_movement_change;
+	protected float healthRatio;
+
 	protected boolean up;
 	protected boolean down;
 	protected boolean right;
 	protected boolean left;
-
 	protected boolean attacking;
-	protected boolean push;
+	protected boolean isDamaged;
 	protected boolean peaceful_movement;
+	protected boolean isHurt = false;
 	public boolean isDead = false;
 	
 	protected BackboneAnimation anim_walk_up;
@@ -79,10 +84,10 @@ public abstract class Creature extends Entity {
 	 */
 	public Creature(World world, float xpos, float ypos, int width, int height) {
 		super(world, xpos, ypos, width, height);
-		useDefault();
+		useDefaultSpeed();
 	}
 	
-	protected void useDefault() {
+	protected void useDefaultSpeed() {
 		speed_right = START_SPEED;
 		speed_left = START_SPEED;
 		speed_up = START_SPEED;
@@ -91,10 +96,10 @@ public abstract class Creature extends Entity {
 		acceleration = DEFAULT_ACCELERATION;
 		max_speed = DEFAULT_MAX_SPEED;
 		peaceful_movement_change = DEFAULT_PEACEFUL_MOVEMENT_CHANGE;
-		health = 100;
+		health = fullHealth;
 	}
 	
-	protected void animationControl() {
+	protected void animateEntity() {
 		if(direction == 0) {			
 			if(up) {
 				if(anim_walk_up != null) {					
@@ -149,43 +154,51 @@ public abstract class Creature extends Entity {
 		}
 	}
 	
-	protected void push() {
-		if(push) {
+	protected void checkIfDamaged() {
+		if(isHurt) {
+			hurtCounter++;
+			if(hurtCounter > 120) {
+				hurtCounter = 0;
+				this.isHurt = false;
+			}
+		}
+		if(isDamaged) {
 			if(push_up > 0) {
 				speed_up += push_up;
 				push_up -= push_excelerator;
 			} else {
 				push_up = 0;
-				push = false;
+				isDamaged = false;
 			}
 			if(push_down > 0) {
 				speed_down += push_down;
 				push_down -= push_excelerator;
 			} else {
 				push_down = 0;
-				push = false;
+				isDamaged = false;
 			}
 			if(push_right > 0) {
 				speed_right += push_right;
 				push_right -= push_excelerator;
 			} else {
 				push_right = 0;
-				push = false;
+				isDamaged = false;
 			}
 			if(push_left > 0) {
 				speed_left += push_left;
 				push_left -= push_excelerator;
 			} else {
 				push_left = 0;
-				push = false;
+				isDamaged = false;
 			}
 		} else {
 			if(attacking) attacking = false;
 		}
 	}
-	
+
+	// Push the entity in a certain direction @useful for damaging an entity
 	public void pushInDirection(int direction, float force) {
-		push = true;
+		isDamaged = true;
 		push_excelerator = 2;
 		push_up = 0;
 		push_right = 0;
@@ -218,7 +231,10 @@ public abstract class Creature extends Entity {
 		attacking = true;
 		pushInDirection(direction, force);
 	}
-	
+
+	// Controls the movement of Creatures
+	// Pos.xpos represents the x position on screen
+	// Pos.ypos represents the y position on screen
 	protected void move() {	
 		pos.ypos -= speed_up;
 		pos.ypos += speed_down;
@@ -237,7 +253,8 @@ public abstract class Creature extends Entity {
 			direction = 3;
 		}
 	}
-	
+
+	// Controls acceleration and deceleration of Entity movement
 	protected void smoothMove() {
 		if(up) {
 			if(speed_up < max_speed) {
@@ -292,23 +309,27 @@ public abstract class Creature extends Entity {
 			}
 		}
 	}
-	
+
+	// Generates random control movement of peaceful entities
 	protected void peacefulMovement() {
-		if(peaceful_movement) {
-			peaceful_movement_counter++;
-			if(peaceful_movement_counter > peaceful_movement_change + random.nextInt((int) peaceful_movement_change)) {
-				int direction = random.nextInt(4);
-				int stay = random.nextInt(3);
-				if(stay == 0) {					
-					setDirection(true, direction);
-				} else {
-					setDirection(false, direction);
+		if(!isDamaged) {
+			if(peaceful_movement) {
+				peaceful_movement_counter++;
+				if(peaceful_movement_counter > peaceful_movement_change + random.nextInt((int) peaceful_movement_change)) {
+					int direction = random.nextInt(4);
+					int stay = random.nextInt(3);
+					if(stay == 0) {
+						setDirection(true, direction);
+					} else {
+						setDirection(false, direction);
+					}
+					peaceful_movement_counter = 0;
 				}
-				peaceful_movement_counter = 0;
 			}
 		}
 	}
-	
+
+	// Set the direction to move in
 	protected void setDirection(boolean move, int direction) {
 		up = false;
 		down = false;
@@ -338,7 +359,8 @@ public abstract class Creature extends Entity {
 			}
 		}
 	}
-	
+
+	// Retrieve jems from the world for experience
 	protected void collectJems() {
 		for(Jem jem: world.getEntity_manager().getJems()) {			
 			if(getBounds().intersects(jem.getBounds())) {
@@ -346,11 +368,13 @@ public abstract class Creature extends Entity {
 			}
 		}
 	}
-	
+
+	// Get the default sort position in the world
 	protected void defaultSort() {
 		sort_y = pos.getWorldLocation().ypos;
 	}
-	
+
+	// Starting the animation playing state
 	protected void playAllAnimations() {
 		anim_walk_up.play();
 		anim_walk_down.play();
@@ -361,7 +385,8 @@ public abstract class Creature extends Entity {
 		anim_idol_down.play();
 		anim_idol_left.play();
 	}
-	
+
+	// Setting animations for the entity
 	protected abstract void setAnimations(int speed, int idol_factor);
 
 	/* (non-Javadoc)
@@ -374,28 +399,45 @@ public abstract class Creature extends Entity {
 
 	/* (non-Javadoc)
 	 * @see survival.main.entity.Entity#render(java.awt.Graphics2D)
+	 *
+	 * Length of health bar is 50
 	 */
 	@Override
 	public void render(Graphics2D g) {
 		if(this instanceof Player == false) {
+
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 0.60));
 			g.setColor(Color.BLACK);
+			g.fillRect((int) pos.getWorldLocation().xpos, (int) pos.getWorldLocation().ypos - 20, 50, 25);
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
 			g.fillRect((int) pos.getWorldLocation().xpos - 2, (int) pos.getWorldLocation().ypos - 2, 54, 8);
-			g.setColor(Color.RED);
-			g.fillRect((int) pos.getWorldLocation().xpos , (int) pos.getWorldLocation().ypos, health / 2, 4);
+			g.setColor(new Color(237,92,80));
+			g.fillRect((int) pos.getWorldLocation().xpos , (int) pos.getWorldLocation().ypos, healthBarWidth, 4);
+			g.setFont(new Font("TimesRoman", Font.PLAIN, 14));
+			g.setColor(Color.white);
+			g.drawString((int) health + " / " + (int) fullHealth, (int) pos.getWorldLocation().xpos - 2, (int) pos.getWorldLocation().ypos - 8);
 		}
+
 	}
 
 	public boolean isAttacking() {
 		return attacking;
 	}
 
-	public void damageEntity(int amount) {
-		if((this.health - amount) > 0) {
-			this.health = health - amount;
-		} else {
-			this.health = 0;
-			this.isDead = true;
-		}
+	public void damageEntity(int amount, int direction, int force) {
+			if((health - amount) > 0) {
+				this.health = (health - amount);
+				this.isHurt = true;
+				pushInDirection(direction, force);
+			} else {
+				this.health = 0;
+				this.isDead = true;
+			}
+			System.out.println(health);
+			System.out.println(fullHealth);
+			this.healthBarWidth = (int) ((health / fullHealth ) * 50);
+			this.healthRatio = 8 % 10;
+			System.out.println(healthRatio);
 	}
 
 	/**
@@ -429,7 +471,7 @@ public abstract class Creature extends Entity {
 	/**
 	 * @return the health
 	 */
-	public int getHealth() {
+	public float getHealth() {
 		return health;
 	}
 	
@@ -450,5 +492,13 @@ public abstract class Creature extends Entity {
 
 	public void setDirection(int direction) {
 		this.direction = direction;
+	}
+
+	public boolean isHurt() {
+		return isHurt;
+	}
+
+	public void setHurt(boolean hurt) {
+		isHurt = hurt;
 	}
 }

@@ -12,6 +12,7 @@ import java.awt.Graphics2D;
 import java.util.Random;
 
 import backbone.engine.main.BackboneGameStateManager;
+import survival.main.entity.creatures.Player;
 import survival.main.generation.Block;
 import survival.main.generation.BlockType;
 import survival.main.generation.World;

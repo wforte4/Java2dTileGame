@@ -35,16 +35,14 @@ public class GUI {
 
 	public void tick() {
 		this.healthToWidth = (int) (player.getHealth() * .01) * healthBarWidth;
-		System.out.println(healthToWidth);
-		System.out.println(player.getHealth());
 	}
 	
 	public void render(Graphics2D g) {
-		player.getAcerbia_bar().render(g);
+		player.getExperienceBar().render(g);
 		g.setColor(Color.black);
-		g.fillRect(((Main.WIDTH / 2) - healthBarWidth / 2) - 2, Main.HEIGHT - 52, healthBarWidth + 4, 14);
-		g.setColor(Color.red);
-		g.fillRect((Main.WIDTH / 2) - healthBarWidth / 2, Main.HEIGHT - 50, healthToWidth, 10);
+		g.fillRect(((Main.WIDTH / 2) - healthBarWidth / 2) - 2, Main.HEIGHT - 102, healthBarWidth + 4, 14);
+		g.setColor(new Color(237,92,80));
+		g.fillRect((Main.WIDTH / 2) - healthBarWidth / 2, Main.HEIGHT - 100, healthToWidth, 10);
 	}
 
 }

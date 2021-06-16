@@ -56,9 +56,9 @@ public class EntityManager {
 		still_entities = new CopyOnWriteArrayList<EntityStill>();
 		jems = new CopyOnWriteArrayList<Jem>();
 		world_texts = new CopyOnWriteArrayList<WorldText>();
+		renderBounds = new Rectangle(0, 0, Main.WIDTH + 300, Main.HEIGHT + 300);
 		this.gsm = gsm;
 
-		renderBounds = new Rectangle(0, 0, Main.WIDTH + 300, Main.HEIGHT + 300);
 	}
 	
 	public void tick() {
@@ -78,7 +78,11 @@ public class EntityManager {
 			if(entity instanceof Creature) {
 				// Check if the player is attacking enemies
 				if(player.isAttacking() && player.getBounds().intersects(entity)) {
-					if(entity instanceof Player == false) ((Creature) entity).damageEntity(20);
+					if(entity instanceof Player == false ) {
+						if(!((Creature) entity).isHurt()) {
+							((Creature) entity).damageEntity(player.getCurrentDamageAmount(), player.getDirection(), 5);
+						}
+					}
 				}
 				if(((Creature) entity).isDead == true) {
 					if(entity instanceof Player) {

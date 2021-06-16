@@ -8,7 +8,7 @@
  */
 package survival.main.gameloop;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 import backbone.engine.main.BackboneGameLoop;
@@ -94,6 +94,9 @@ public class SurvivalGameLoop extends BackboneGameLoop {
 	 */
 	@Override
 	protected void render(Graphics2D g) {
+		g.setRenderingHint(
+				RenderingHints.KEY_TEXT_ANTIALIASING,
+				RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
 		gsm.render(g);
 		BackboneMouseManager.render(g);
 	}

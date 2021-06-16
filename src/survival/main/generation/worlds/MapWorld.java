@@ -19,6 +19,7 @@ import backbone.engine.main.BackboneImageLoader;
 import survival.main.drops.Jem;
 import survival.main.entity.Entity;
 import survival.main.entity.creatures.CreatureSlime;
+import survival.main.entity.creatures.Player;
 import survival.main.entity.still.EntityJukeBox;
 import survival.main.entity.still.EntityTree;
 import survival.main.generation.Block;
@@ -42,7 +43,7 @@ public class MapWorld extends World {
 	public MapWorld(BackboneGameStateManager gsm, String path) {
 		super(gsm);
 		loadMap(path);
-		for(int i = 0; i < 10; i++) {
+		for(int i = 0; i < 1; i++) {
 			entity_manager.addEntity(new CreatureSlime(this, 200, 200, 48, 48));
 		}
 	}
