@@ -9,8 +9,10 @@
 package survival.main.entity.creatures;
 
 import java.awt.Graphics2D;
+import java.util.Random;
 
 import backbone.engine.main.BackboneAnimation;
+import survival.main.drops.Jem;
 import survival.main.entity.element.Element;
 import survival.main.generation.World;
 import survival.main.images.Assets;
@@ -101,4 +103,11 @@ public class CreatureSlime extends Creature {
 		drawElement(g);
 	}
 
+	@Override
+	public void onDeath() {
+		int chance = random.nextInt(2);
+		System.out.println(chance);
+		if(chance == 1) world.getEntity_manager().dropJem(pos, random.nextInt(100));
+		world.getEntity_manager().dropJem(pos, random.nextInt(100));
+	}
 }

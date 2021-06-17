@@ -8,17 +8,19 @@
  */
 package survival.main.generation;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import backbone.engine.main.BackboneGameStateManager;
 import backbone.engine.main.BackboneVector2f;
+import survival.main.Main;
 import survival.main.debug.DebugMenu;
 import survival.main.entity.Entity;
 import survival.main.entity.EntityManager;
 import survival.main.entity.creatures.Player;
 import survival.main.light.Light;
 import survival.main.light.LightMap;
+import survival.main.weather.Weather;
 
 /**
  * File: World.java 
@@ -37,12 +39,18 @@ public abstract class World {
 	protected Player player;
 	protected LightMap light_map;
 	protected DebugMenu menu;
+	protected Weather weather;
 	protected int block_size = Block.BLOCKSIZE;
 	protected int width;
 	protected int height;
+
 	protected boolean debug = false;
+	protected boolean isLoading = true;
+
 	public float worldxpos;
 	public float worldypos;
+
+	protected float loadingPercentage;
 	
 	public World(BackboneGameStateManager gsm) {
 		block_manager = new BlockManager();
@@ -65,6 +73,12 @@ public abstract class World {
 	}
 	
 	public void renderPlayerGUI(Graphics2D g) {
+		if(isLoading) {
+			g.setColor(Color.white);
+			g.fillRect(0, 0, Main.WIDTH, Main.HEIGHT);
+			g.setColor(new Color(237,92,80));
+			g.fillRect(200, 300, (int) (loadingPercentage * 800), 30);
+		}
 		player.getGui().render(g);
 	}
 	

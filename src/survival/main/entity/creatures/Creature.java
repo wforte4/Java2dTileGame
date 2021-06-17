@@ -44,12 +44,11 @@ public abstract class Creature extends Entity {
 
 	protected float max_speed;
 	protected float acceleration;
-	protected float current_speed;
 	protected float push_up;
 	protected float push_down;
 	protected float push_left;
 	protected float push_right;
-	protected float push_excelerator;
+	protected float push_accelerator;
 	protected float peaceful_movement_counter;
 	protected float peaceful_movement_change;
 	protected float healthRatio;
@@ -165,28 +164,28 @@ public abstract class Creature extends Entity {
 		if(isDamaged) {
 			if(push_up > 0) {
 				speed_up += push_up;
-				push_up -= push_excelerator;
+				push_up -= push_accelerator;
 			} else {
 				push_up = 0;
 				isDamaged = false;
 			}
 			if(push_down > 0) {
 				speed_down += push_down;
-				push_down -= push_excelerator;
+				push_down -= push_accelerator;
 			} else {
 				push_down = 0;
 				isDamaged = false;
 			}
 			if(push_right > 0) {
 				speed_right += push_right;
-				push_right -= push_excelerator;
+				push_right -= push_accelerator;
 			} else {
 				push_right = 0;
 				isDamaged = false;
 			}
 			if(push_left > 0) {
 				speed_left += push_left;
-				push_left -= push_excelerator;
+				push_left -= push_accelerator;
 			} else {
 				push_left = 0;
 				isDamaged = false;
@@ -199,7 +198,7 @@ public abstract class Creature extends Entity {
 	// Push the entity in a certain direction @useful for damaging an entity
 	public void pushInDirection(int direction, float force) {
 		isDamaged = true;
-		push_excelerator = 2;
+		push_accelerator = 2;
 		push_up = 0;
 		push_right = 0;
 		push_down = 0;
@@ -405,7 +404,6 @@ public abstract class Creature extends Entity {
 	@Override
 	public void render(Graphics2D g) {
 		if(this instanceof Player == false) {
-
 			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 0.60));
 			g.setColor(Color.BLACK);
 			g.fillRect((int) pos.getWorldLocation().xpos, (int) pos.getWorldLocation().ypos - 20, 50, 25);
@@ -422,6 +420,10 @@ public abstract class Creature extends Entity {
 
 	public boolean isAttacking() {
 		return attacking;
+	}
+
+	public void onDeath() {
+
 	}
 
 	public void damageEntity(int amount, int direction, int force) {

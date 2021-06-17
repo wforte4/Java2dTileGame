@@ -43,7 +43,7 @@ public class MapWorld extends World {
 	public MapWorld(BackboneGameStateManager gsm, String path) {
 		super(gsm);
 		loadMap(path);
-		for(int i = 0; i < 1; i++) {
+		for(int i = 0; i < 13; i++) {
 			entity_manager.addEntity(new CreatureSlime(this, 200, 200, 48, 48));
 		}
 	}
@@ -92,6 +92,7 @@ public class MapWorld extends World {
 				}
 				
 				for(int i = 0; i < BlockType.values().length; i++) {
+					if(i == BlockType.values().length - 1) isLoading = false;
 					BlockType blocktype = BlockType.values()[i];
 					if(current_color == new Color(blocktype.getColor()).getRGB()) {
 						block_manager.addBlock(

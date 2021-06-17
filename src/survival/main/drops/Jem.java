@@ -41,7 +41,7 @@ public class Jem extends Rectangle {
 	private double yy;
 	
 	public Jem(BackboneVector2f pos, int width, int height, int value) {
-		this.pos = new BackboneVector2f(pos.xpos -200, pos.ypos);
+		this.pos = new BackboneVector2f(pos.xpos, pos.ypos);
 		this.random = new Random();
 		this.width = width;
 		this.height = height;

@@ -6,7 +6,7 @@
  * Project: Survival
  * Package: survival.main.world
  */
-package survival.main.world;
+package survival.main.generation.worlds.text;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;

@@ -19,7 +19,7 @@ import survival.main.drops.Jem;
 import survival.main.entity.creatures.Creature;
 import survival.main.entity.creatures.Player;
 import survival.main.entity.still.EntityStill;
-import survival.main.world.WorldText;
+import survival.main.generation.worlds.text.WorldText;
 
 /**
  * File: EntityManager.java 
@@ -80,7 +80,7 @@ public class EntityManager {
 				if(player.isAttacking() && player.getBounds().intersects(entity)) {
 					if(entity instanceof Player == false ) {
 						if(!((Creature) entity).isHurt()) {
-							((Creature) entity).damageEntity(player.getCurrentDamageAmount(), player.getDirection(), 5);
+							((Creature) entity).damageEntity(player.getCurrentDamageAmount(), player.getDirection(), 7);
 						}
 					}
 				}
@@ -88,6 +88,7 @@ public class EntityManager {
 					if(entity instanceof Player) {
 
 					} else {
+						((Creature) entity).onDeath();
 						if(loaded_entities.contains(entity)) { loaded_entities.remove(entity); }
 						if(entities.contains(entity)) { entities.remove(entity); }
 					}
