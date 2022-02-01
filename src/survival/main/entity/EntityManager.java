@@ -76,19 +76,25 @@ public class EntityManager {
 			}
 			/* @Creature type Entities Only */
 			if(entity instanceof Creature) {
+				Creature currentCreature = (Creature) entity;
 				// Check if the player is attacking enemies
 				if(player.isAttacking() && player.getBounds().intersects(entity)) {
 					if(entity instanceof Player == false ) {
-						if(!((Creature) entity).isHurt()) {
-							((Creature) entity).damageEntity(player.getCurrentDamageAmount(), player.getDirection(), 7);
+						if(!currentCreature.isHurt()) {
+							currentCreature.damageEntity(player.getCurrentDamageAmount(), player.getDirection(), 7);
 						}
 					}
 				}
-				if(((Creature) entity).isDead == true) {
+
+				if(currentCreature.isAttacking() && entity.getBounds().intersects(player) && !player.isAttacking()) {
+					player.damageEntity((int) currentCreature.getStrength(), currentCreature.getDirection(), 7);
+				}
+
+				if(currentCreature.isDead == true) {
 					if(entity instanceof Player) {
 
 					} else {
-						((Creature) entity).onDeath();
+						currentCreature.onDeath();
 						if(loaded_entities.contains(entity)) { loaded_entities.remove(entity); }
 						if(entities.contains(entity)) { entities.remove(entity); }
 					}
@@ -105,6 +111,7 @@ public class EntityManager {
 	}
 	
 	public void render(Graphics2D g) {
+		// Render's the entities in the order based on their y coordinate
 		loaded_entities.sort(renderSorter);
 		for(Jem jem: jems) {
 			jem.render(g);

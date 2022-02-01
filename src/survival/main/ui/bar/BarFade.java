@@ -28,7 +28,7 @@ import backbone.engine.main.BackboneVector2f;
 public class BarFade {
 	
 	private BackboneVector2f pos;
-	private GrowthBar bar;
+	private ExperienceBar bar;
 	private Color color;
 	private int width;
 	private int height;
@@ -37,7 +37,7 @@ public class BarFade {
 	private float xx;
 	private float yy;
 	
-	public BarFade(GrowthBar bar, BackboneVector2f pos, int width, int height, Color color) {
+	public BarFade(ExperienceBar bar, BackboneVector2f pos, int width, int height, Color color) {
 		this.bar = bar;
 		this.pos = pos;
 		this.width = width;

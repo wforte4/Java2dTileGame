@@ -42,6 +42,7 @@ public class CreatureSlime extends Creature {
 		setAnimations(180, 4);
 		peaceful_movement = true;
 		acceleration = .1f;
+		strength = 2f;
 		if(random.nextInt(4) == 2) {
 			element = Element.APHOTICACERBIA;
 		}
@@ -73,7 +74,7 @@ public class CreatureSlime extends Creature {
 		setSolidWorldBounds(0, 10);
 		setBlockCollisionBounds(pos.getWorldLocation().xpos, pos.getWorldLocation().ypos + bounds_height / 2, bounds_width, bounds_height / 2);
 		checkCollisions();
-		animateEntity();
+		handleAnimation();
 		peacefulMovement();
 		move();
 		smoothMove();
@@ -106,7 +107,6 @@ public class CreatureSlime extends Creature {
 	@Override
 	public void onDeath() {
 		int chance = random.nextInt(2);
-		System.out.println(chance);
 		if(chance == 1) world.getEntity_manager().dropJem(pos, random.nextInt(100));
 		world.getEntity_manager().dropJem(pos, random.nextInt(100));
 	}

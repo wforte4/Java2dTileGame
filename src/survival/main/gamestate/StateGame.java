@@ -10,6 +10,7 @@ package survival.main.gamestate;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.io.IOException;
 
 import backbone.engine.main.BackboneGameState;
 import backbone.engine.main.BackboneGameStateManager;
@@ -17,6 +18,12 @@ import survival.main.Main;
 import survival.main.entity.creatures.Player;
 import survival.main.generation.World;
 import survival.main.generation.worlds.MapWorld;
+import survival.main.generation.worlds.RandomWorld;
+import survival.main.sound.Sound;
+import survival.main.sound.SoundEvent;
+
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * File: StateGame.java 
@@ -32,6 +39,7 @@ public class StateGame extends BackboneGameState {
 	
 	private World world;
 	private Player player;
+	private SoundEvent backgroundNoise;
 
 	/**
 	 * @param gsm
@@ -46,7 +54,7 @@ public class StateGame extends BackboneGameState {
 	@Override
 	public void init() {
 		world = new MapWorld(gsm, "/worlds/map_diner.png");
-		player = new Player(world, 140, 140, 70, 70);
+		player = new Player(world, 20, 20, 70, 70);
 		world.setPlayer(player);
 	}
 
@@ -71,8 +79,6 @@ public class StateGame extends BackboneGameState {
 	 */
 	@Override
 	public void render(Graphics2D g) {
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, Main.WIDTH, Main.HEIGHT);
 		world.render(g);
 	}
 

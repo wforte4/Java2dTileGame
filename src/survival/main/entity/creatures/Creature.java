@@ -12,6 +12,7 @@ import java.awt.*;
 
 import backbone.engine.main.BackboneAnimation;
 import backbone.engine.main.BackboneSprite;
+import backbone.engine.main.BackboneVector2f;
 import survival.main.drops.Jem;
 import survival.main.entity.Entity;
 import survival.main.generation.World;
@@ -39,8 +40,9 @@ public abstract class Creature extends Entity {
 	protected float health;
 	protected float fullHealth = 10;
 	protected int healthBarWidth = 50;
-	protected int strength;
+	protected float strength;
 	protected int hurtCounter;
+	protected int amountOfTimeToBeHurt = 20; // In Milliseconds
 
 	protected float max_speed;
 	protected float acceleration;
@@ -58,10 +60,11 @@ public abstract class Creature extends Entity {
 	protected boolean right;
 	protected boolean left;
 	protected boolean attacking;
-	protected boolean isDamaged;
 	protected boolean peaceful_movement;
 	protected boolean isHurt = false;
 	public boolean isDead = false;
+
+	public CreatureState current_state = CreatureState.PEACEFUL;
 	
 	protected BackboneAnimation anim_walk_up;
 	protected BackboneAnimation anim_walk_down;
@@ -71,6 +74,8 @@ public abstract class Creature extends Entity {
 	protected BackboneAnimation anim_idol_down;
 	protected BackboneAnimation anim_idol_right;
 	protected BackboneAnimation anim_idol_left;
+
+	protected BackboneAnimation anim_fight_left;
 	
 	protected BackboneSprite current_sprite;
 
@@ -98,57 +103,64 @@ public abstract class Creature extends Entity {
 		health = fullHealth;
 	}
 	
-	protected void animateEntity() {
-		if(direction == 0) {			
-			if(up) {
-				if(anim_walk_up != null) {					
-					anim_walk_up.update(System.currentTimeMillis());
-					current_sprite = anim_walk_up.getSprite();
-				}
-			} else {
-				if(anim_idol_up != null) {					
-					anim_idol_up.update(System.currentTimeMillis());
-					current_sprite = anim_idol_up.getSprite();
-				}
-			}
-		}
-		if(direction == 2) {			
-			if(down) {
-				if(anim_walk_down != null) {				
-					anim_walk_down.update(System.currentTimeMillis());
-					current_sprite = anim_walk_down.getSprite();
-				}
-			} else {
-				if(anim_idol_down != null) {
-					anim_idol_down.update(System.currentTimeMillis());
-					current_sprite = anim_idol_down.getSprite();
+	protected void handleAnimation() {
+		if(!attacking) {
+			if(direction == 0) {
+				if(up) {
+					if(anim_walk_up != null) {
+						anim_walk_up.update(System.currentTimeMillis());
+						current_sprite = anim_walk_up.getSprite();
+					}
+				} else {
+					if(anim_idol_up != null) {
+						anim_idol_up.update(System.currentTimeMillis());
+						current_sprite = anim_idol_up.getSprite();
+					}
 				}
 			}
-		}
-		if(direction == 1) {			
-			if(right) {
-				if(anim_walk_right != null) {					
-					anim_walk_right.update(System.currentTimeMillis());
-					current_sprite = anim_walk_right.getSprite();
-				}
-			} else {
-				if(anim_idol_right != null) {
-					anim_idol_right.update(System.currentTimeMillis());
-					current_sprite = anim_idol_right.getSprite();
+			if(direction == 1) {
+				if(right) {
+					if(anim_walk_right != null) {
+						anim_walk_right.update(System.currentTimeMillis());
+						current_sprite = anim_walk_right.getSprite();
+					}
+				} else {
+					if(anim_idol_right != null) {
+						anim_idol_right.update(System.currentTimeMillis());
+						current_sprite = anim_idol_right.getSprite();
+					}
 				}
 			}
-		}
-		if(direction == 3) {			
-			if(left) {
-				if(anim_walk_left != null) {					
-					anim_walk_left.update(System.currentTimeMillis());
-					current_sprite = anim_walk_left.getSprite();
+			if(direction == 2) {
+				if(down) {
+					if(anim_walk_down != null) {
+						anim_walk_down.update(System.currentTimeMillis());
+						current_sprite = anim_walk_down.getSprite();
+					}
+				} else {
+					if(anim_idol_down != null) {
+						anim_idol_down.update(System.currentTimeMillis());
+						current_sprite = anim_idol_down.getSprite();
+					}
 				}
-			} else {
-				if(anim_idol_left != null) {
-					anim_idol_left.update(System.currentTimeMillis());
-					current_sprite = anim_idol_left.getSprite();
+			}
+			if(direction == 3) {
+				if(left) {
+					if(anim_walk_left != null) {
+						anim_walk_left.update(System.currentTimeMillis());
+						current_sprite = anim_walk_left.getSprite();
+					}
+				} else {
+					if(anim_idol_left != null) {
+						anim_idol_left.update(System.currentTimeMillis());
+						current_sprite = anim_idol_left.getSprite();
+					}
 				}
+			}
+		} else {
+			if(direction == 3) {
+				anim_fight_left.update(System.currentTimeMillis());
+				current_sprite = anim_fight_left.getSprite();
 			}
 		}
 	}
@@ -156,48 +168,50 @@ public abstract class Creature extends Entity {
 	protected void checkIfDamaged() {
 		if(isHurt) {
 			hurtCounter++;
-			if(hurtCounter > 120) {
+			if(hurtCounter > amountOfTimeToBeHurt) {
 				hurtCounter = 0;
 				this.isHurt = false;
 			}
 		}
-		if(isDamaged) {
+		if(current_state == CreatureState.FIGHTING) {
 			if(push_up > 0) {
 				speed_up += push_up;
 				push_up -= push_accelerator;
 			} else {
 				push_up = 0;
-				isDamaged = false;
+				setCurrent_state(CreatureState.PEACEFUL);
 			}
 			if(push_down > 0) {
 				speed_down += push_down;
 				push_down -= push_accelerator;
 			} else {
 				push_down = 0;
-				isDamaged = false;
+				setCurrent_state(CreatureState.PEACEFUL);
 			}
 			if(push_right > 0) {
 				speed_right += push_right;
 				push_right -= push_accelerator;
 			} else {
 				push_right = 0;
-				isDamaged = false;
+				setCurrent_state(CreatureState.PEACEFUL);
 			}
 			if(push_left > 0) {
 				speed_left += push_left;
 				push_left -= push_accelerator;
 			} else {
 				push_left = 0;
-				isDamaged = false;
+				setCurrent_state(CreatureState.PEACEFUL);
 			}
 		} else {
-			if(attacking) attacking = false;
+			if(direction == 3 && anim_fight_left.isDone()) {
+				attacking = false;
+			}
 		}
 	}
 
 	// Push the entity in a certain direction @useful for damaging an entity
 	public void pushInDirection(int direction, float force) {
-		isDamaged = true;
+		setCurrent_state(CreatureState.FIGHTING);
 		push_accelerator = 2;
 		push_up = 0;
 		push_right = 0;
@@ -311,7 +325,7 @@ public abstract class Creature extends Entity {
 
 	// Generates random control movement of peaceful entities
 	protected void peacefulMovement() {
-		if(!isDamaged) {
+		if(current_state == CreatureState.PEACEFUL) {
 			if(peaceful_movement) {
 				peaceful_movement_counter++;
 				if(peaceful_movement_counter > peaceful_movement_change + random.nextInt((int) peaceful_movement_change)) {
@@ -326,6 +340,13 @@ public abstract class Creature extends Entity {
 				}
 			}
 		}
+	}
+
+	protected boolean isInPlayerDistance() {
+		if(BackboneVector2f.distanceBetweenVectors(pos, world.getPlayer().getPos()) < 20) {
+			return true;
+		}
+		return false;
 	}
 
 	// Set the direction to move in
@@ -383,6 +404,7 @@ public abstract class Creature extends Entity {
 		anim_idol_right.play();
 		anim_idol_down.play();
 		anim_idol_left.play();
+		anim_fight_left.play();
 	}
 
 	// Setting animations for the entity
@@ -415,7 +437,6 @@ public abstract class Creature extends Entity {
 			g.setColor(Color.white);
 			g.drawString((int) health + " / " + (int) fullHealth, (int) pos.getWorldLocation().xpos - 2, (int) pos.getWorldLocation().ypos - 8);
 		}
-
 	}
 
 	public boolean isAttacking() {
@@ -435,11 +456,8 @@ public abstract class Creature extends Entity {
 				this.health = 0;
 				this.isDead = true;
 			}
-			System.out.println(health);
-			System.out.println(fullHealth);
 			this.healthBarWidth = (int) ((health / fullHealth ) * 50);
 			this.healthRatio = 8 % 10;
-			System.out.println(healthRatio);
 	}
 
 	/**
@@ -480,7 +498,7 @@ public abstract class Creature extends Entity {
 	/**
 	 * @return the strength
 	 */
-	public int getStrength() {
+	public float getStrength() {
 		return strength;
 	}
 
@@ -502,5 +520,13 @@ public abstract class Creature extends Entity {
 
 	public void setHurt(boolean hurt) {
 		isHurt = hurt;
+	}
+
+	public CreatureState getCurrent_state() {
+		return current_state;
+	}
+
+	public void setCurrent_state(CreatureState current_state) {
+		this.current_state = current_state;
 	}
 }

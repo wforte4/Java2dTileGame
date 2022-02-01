@@ -10,7 +10,7 @@ package survival.main.images;
 
 import backbone.engine.main.BackboneImageLoader;
 import backbone.engine.main.BackboneSprite;
-import backbone.engine.main.BackboneSpriteSheet;
+import survival.main.images.SpriteSheet;
 
 /**
  * File: Assets.java 
@@ -25,7 +25,7 @@ import backbone.engine.main.BackboneSpriteSheet;
 public class Assets {
 	
 	// SpriteSheets
-	public static BackboneSpriteSheet sheet_block,
+	public static SpriteSheet sheet_block,
 									  sheet_player,
 									  sheet_zombie,
 									  sheet_slime;
@@ -95,6 +95,7 @@ public class Assets {
 								   zombie_idol_up,
 								   zombie_idol_left,
 								   zombie_idol_right,
+			                       zombie_fight_left,
 								   slime_up,
 								   slime_down,
 								   slime_left,
@@ -107,10 +108,10 @@ public class Assets {
 	public static void loadImages() {
 		
 		// SpriteSheets
-		sheet_block = new BackboneSpriteSheet(BackboneImageLoader.loadImage("/spritesheets/sheet_block.png"), 24);
-		sheet_player = new BackboneSpriteSheet(BackboneImageLoader.loadImage("/spritesheets/sheet_player.png"), 24);
-		sheet_zombie = new BackboneSpriteSheet(BackboneImageLoader.loadImage("/spritesheets/sheet_zombie.png"), 24);
-		sheet_slime = new BackboneSpriteSheet(BackboneImageLoader.loadImage("/spritesheets/sheet_slime.png"), 24);
+		sheet_block = new SpriteSheet(BackboneImageLoader.loadImage("/spritesheets/sheet_block.png"), 24);
+		sheet_player = new SpriteSheet(BackboneImageLoader.loadImage("/spritesheets/sheet_player.png"), 24);
+		sheet_zombie = new SpriteSheet(BackboneImageLoader.loadImage("/spritesheets/sheet_zombie.png"), 24);
+		sheet_slime = new SpriteSheet(BackboneImageLoader.loadImage("/spritesheets/sheet_slime.png"), 24);
 		
 		player_up = new BackboneSprite[2];
 		player_down = new BackboneSprite[2]; 
@@ -124,6 +125,7 @@ public class Assets {
 		zombie_idol_up = new BackboneSprite[3];
 		zombie_idol_left = new BackboneSprite[3];
 		zombie_idol_right = new BackboneSprite[3];
+		zombie_fight_left = new BackboneSprite[2];
 		slime_up = new BackboneSprite[2];
 		slime_down = new BackboneSprite[2];
 		slime_left = new BackboneSprite[2];
@@ -196,6 +198,7 @@ public class Assets {
 		sheet_zombie.setSprites("Zombie Idol Up", zombie_idol_up, 0, 1);
 		sheet_zombie.setSprites("Zombie Idol Right", zombie_idol_right, 0, 4);
 		sheet_zombie.setSprites("Zombie Idol Left", zombie_idol_left, 0, 7);
+		sheet_zombie.setSpritesWithSize("Zombie Fight Left", zombie_fight_left, 1, 8, 48, 24);
 		sheet_slime.setSprites("Slime Right", slime_right, 0, 2);
 		sheet_slime.setSprites("Slime Left", slime_left, 0, 3);
 		sheet_slime.setSprites("Slime Up", slime_up, 0, 1);

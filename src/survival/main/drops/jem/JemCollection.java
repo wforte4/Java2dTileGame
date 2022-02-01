@@ -13,7 +13,7 @@ import java.util.Random;
 import backbone.engine.main.BackboneVector2f;
 import survival.main.drops.Jem;
 import survival.main.entity.Entity;
-import survival.main.ui.bar.GrowthBar;
+import survival.main.ui.bar.ExperienceBar;
 
 /**
  * File: JemCollection.java 
@@ -29,7 +29,7 @@ public class JemCollection {
 	
 	private Entity entity;
 	private Random random;
-	private GrowthBar bar;
+	private ExperienceBar bar;
 	private int current_value;
 	
 	public JemCollection(Entity entity) {
@@ -37,7 +37,7 @@ public class JemCollection {
 		this.random = new Random();
 	}
 	
-	public JemCollection(Entity entity, GrowthBar bar) {
+	public JemCollection(Entity entity, ExperienceBar bar) {
 		this.entity = entity;
 		this.bar = bar;
 		this.random = new Random();

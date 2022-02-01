@@ -20,6 +20,7 @@ import survival.main.entity.EntityManager;
 import survival.main.entity.creatures.Player;
 import survival.main.light.Light;
 import survival.main.light.LightMap;
+import survival.main.sound.Sound;
 import survival.main.weather.Weather;
 
 /**
@@ -36,6 +37,8 @@ public abstract class World {
 	
 	protected BlockManager block_manager;
 	protected EntityManager entity_manager;
+	protected BackboneGameStateManager gsm;
+	public Sound sound = new Sound();
 	protected Player player;
 	protected LightMap light_map;
 	protected DebugMenu menu;
@@ -56,6 +59,9 @@ public abstract class World {
 		block_manager = new BlockManager();
 		entity_manager = new EntityManager(gsm);
 		menu = new DebugMenu(new BackboneVector2f(50, 50));
+		playMusic("background");
+		sound.setVolume(.2f);
+		this.gsm = gsm;
 	}
 	
 	public void loadWorld() {
@@ -162,4 +168,22 @@ public abstract class World {
 		return debug;
 	}
 
+	public BackboneGameStateManager getGsm() {
+		return gsm;
+	}
+
+	public void playMusic(String key) {
+		sound.setFile(key);
+		sound.play();
+		sound.loop();
+	}
+
+	public void stopMusic() {
+		sound.stop();
+	}
+
+	public void playSoundEffect(String key) {
+		sound.setFile(key);
+		sound.play();
+	}
 }

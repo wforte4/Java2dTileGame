@@ -27,6 +27,7 @@ import survival.main.generation.BlockType;
 import survival.main.generation.World;
 import survival.main.light.Light;
 import survival.main.light.LightMap;
+import survival.main.sound.Sound;
 
 /**
  * File: MapWorld.java 
@@ -39,19 +40,17 @@ import survival.main.light.LightMap;
  */
 
 public class MapWorld extends World {
-	
+
 	public MapWorld(BackboneGameStateManager gsm, String path) {
 		super(gsm);
 		loadMap(path);
-		for(int i = 0; i < 13; i++) {
-			entity_manager.addEntity(new CreatureSlime(this, 200, 200, 48, 48));
-		}
 	}
 
 	public void loadMap(String path) {
 		BufferedImage map = BackboneImageLoader.loadImage(path);
 		this.width = map.getWidth();
 		this.height = map.getHeight();
+		System.out.println(height);
 		light_map = new LightMap(this, true, 30);
 		light_map.addLight(new Light(400, 400, 400, 0x000000));
 		
@@ -84,13 +83,15 @@ public class MapWorld extends World {
 									BlockType.DINERTILE));
 					entity_manager.addEntity(
 							new EntityJukeBox(
-									this, 
+									this,
 									x * block_size,
 									y * block_size - 170,
 									300,
 									300));
+					continue;
 				}
-				
+
+				// Consider all block type and their colors and then place a block in the world at that position
 				for(int i = 0; i < BlockType.values().length; i++) {
 					if(i == BlockType.values().length - 1) isLoading = false;
 					BlockType blocktype = BlockType.values()[i];
@@ -101,13 +102,13 @@ public class MapWorld extends World {
 										y * block_size,
 										blocktype)
 								.setSolid(blocktype.isSolid()));
-						System.out.println("Added Block: " + blocktype.name());
 						break;
 					}
 				}
 				
 			}
 		}
+		isLoading = false;
 	}
 	
 	/* (non-Javadoc)
@@ -138,7 +139,6 @@ public class MapWorld extends World {
 			for(Jem jem: entity_manager.getJems()) {
 				g.draw(jem.getBounds());
 			}
-			getPlayer().getJem_magnet().render(g);
 			menu.addLine("World X Position: " + worldxpos);
 			menu.addLine("World Y Position: " + worldypos);
 			menu.addLine("Player X: " + player.getWorld_position_fix().xpos);

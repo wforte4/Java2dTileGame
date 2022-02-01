@@ -64,17 +64,11 @@ public class BlockManager {
 	public void addBlock(Block block) {
 		blocks.add(block);
 		if(block.isSolid()) solid_blocks.add(block);
-		System.out.println("Added Block: " + block.getBlock_type().name() + 
-				" At || xpos: " + block.getPos().xpos +
-				" ypos: " + block.getPos().ypos);
 	}
 	
 	public void removeBlock(Block block) {
 		blocks.remove(block);
 		if(block.isSolid()) solid_blocks.remove(block);
-		System.out.println("Removed Block: " + block.getBlock_type().name() + 
-				" At || xpos: " + block.getPos().xpos +
-				" ypos: " + block.getPos().ypos);
 	}
 	
 	/**
