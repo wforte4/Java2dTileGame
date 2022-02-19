@@ -34,7 +34,8 @@ public class Rain extends Condition {
 				Main.WIDTH, 
 				20,
 				100,
-				2);
+				2,
+				8);
 	}
 
 	/* (non-Javadoc)

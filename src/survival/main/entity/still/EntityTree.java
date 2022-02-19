@@ -50,7 +50,6 @@ public class EntityTree extends EntityStill {
 		image = tree_images.get(new Random().nextInt(tree_images.size()));
 		bounds_width = width / 2;
 		bounds_height = height / 2 - 50;
-		element = null;
 		world.addLight(new Light(this, 200, new Random().nextInt(0xffffff)).setColorValue(.7f));
 	}
 
@@ -61,7 +60,6 @@ public class EntityTree extends EntityStill {
 	public void tick() {
 		sort_y = pos.getWorldLocation().ypos;
 		setSolidWorldBounds(width / 2 - 82, height / 2 + 45);
-		tickParticleElementManager();
 	}
 
 	/* (non-Javadoc)
@@ -69,9 +67,7 @@ public class EntityTree extends EntityStill {
 	 */
 	@Override
 	public void render(Graphics2D g) {
-		drawElement(g);
 		g.drawImage(image, (int) pos.getWorldLocation().xpos, (int) pos.getWorldLocation().ypos, width, height, null);
-		drawElement(g);
 	}
 
 }

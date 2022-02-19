@@ -16,6 +16,7 @@ public class Sound {
         // Sound Effects
         map.put("punch", getClass().getResource("/sounds/effects/punch.wav"));
         map.put("sword", getClass().getResource("/sounds/effects/sword.wav"));
+        map.put("hit", getClass().getResource("/sounds/effects/hit.wav"));
 
         // Music
         map.put("background", getClass().getResource("/sounds/background/background_one.wav"));

@@ -42,7 +42,6 @@ public class EntityJukeBox extends EntityStill {
 		image = Assets.jukebox.getImage();
 		bounds_width = width / 2 + 30;
 		bounds_height = height / 2 + 50;
-		element = Element.APHOTICACERBIA;
 	}
 	
 	/* (non-Javadoc)
@@ -52,7 +51,6 @@ public class EntityJukeBox extends EntityStill {
 	public void tick() {
 		sort_y = pos.getWorldLocation().ypos - 30;
 		setSolidWorldBounds(65, 65);
-		tickParticleElementManager();
 	}
 	
 	/* (non-Javadoc)
@@ -62,7 +60,6 @@ public class EntityJukeBox extends EntityStill {
 	public void render(Graphics2D g) {
 		super.render(g);
 		g.drawImage(image, (int) (pos.getWorldLocation().xpos), (int) (pos.getWorldLocation().ypos), width, height, null);
-		drawElement(g);
 	}
 
 }

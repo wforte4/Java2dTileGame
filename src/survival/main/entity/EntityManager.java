@@ -81,13 +81,17 @@ public class EntityManager {
 				if(player.isAttacking() && player.getBounds().intersects(entity)) {
 					if(entity instanceof Player == false ) {
 						if(!currentCreature.isHurt()) {
-							currentCreature.damageEntity(player.getCurrentDamageAmount(), player.getDirection(), 7);
+							currentCreature.damageEntity(player.getCurrentDamageAmount(), player.getDirection(), 12);
+							currentCreature.onHit();
 						}
 					}
 				}
 
-				if(currentCreature.isAttacking() && entity.getBounds().intersects(player) && !player.isAttacking()) {
+				// Check if other creatures are attacking player
+				if(currentCreature.isAttacking() && entity.getBounds().intersects(player) && !player.isAttacking() && !player.isHurt()) {
+					currentCreature.stopMovement();
 					player.damageEntity((int) currentCreature.getStrength(), currentCreature.getDirection(), 7);
+					player.onHit();
 				}
 
 				if(currentCreature.isDead == true) {

@@ -38,42 +38,47 @@ public class ParticleManager {
 	private Color color;
 	private BufferedImage image;
 	private boolean generating;
-	private int generate_particle;
+	private int timeBetweenParticles;
 	private int generate_particle_counter;
-	private int particle_life;
+	private int particleLifeTime;
 	private int width;
 	private int height;
 	private int x;
 	private int y;
+	private int particleSize;
 	
-	public ParticleManager(ParticleManagerType type, Entity entity, int particle_life, int generate_particle) {
+	public ParticleManager(ParticleManagerType type, Entity entity, int particleLifeTime, int timeBetweenParticles, int particleSize) {
 		this.particles = new CopyOnWriteArrayList<Particle>();
 		this.type = type;
 		this.entity = entity;
-		this.particle_life = particle_life;
-		this.generate_particle = generate_particle;
+		this.particleLifeTime = particleLifeTime;
+		this.timeBetweenParticles = timeBetweenParticles;
 		this.x = (int) entity.getPos().xpos;
 		this.y = (int) entity.getPos().ypos;
 		this.width = entity.getImageWidth() / 2;
 		this.height = entity.getImageHeight() / 2;
 		this.generating = false;
 		this.random = new Random();
+		this.particleSize = particleSize;
 	}
 	
-	public ParticleManager(ParticleManagerType type, BackboneVector2f pos, int width, int height, int particle_life, int generate_particle) {
+	public ParticleManager(ParticleManagerType type, BackboneVector2f pos, int width, int height, int particleLifeTime, int timeBetweenParticles, int particleSize) {
 		this.particles = new CopyOnWriteArrayList<Particle>();
 		this.type = type;
-		this.particle_life = particle_life;
-		this.generate_particle = generate_particle;
+		this.particleLifeTime = particleLifeTime;
+		this.timeBetweenParticles = timeBetweenParticles;
 		this.x = (int) pos.xpos;
 		this.y = (int) pos.ypos;
 		this.width = width;
 		this.height = height;
 		this.generating = false;
 		this.random = new Random();
+		this.particleSize = particleSize;
 	}
 	
 	public void tick() {
+
+		// If there is an entity then get his position and set it to the position of the particle manager
 		if(entity != null) {
 			if(entity instanceof Player) {
 				this.x = (int) ((Player) entity).getElement_pos().xpos + width / 4;
@@ -83,9 +88,12 @@ public class ParticleManager {
 				this.y = (int) (entity.getPos().ypos + width / 4);
 			}
 		}
+
+		// Generation counter of the particles
+		// Decides when the particle should be created
 		if(generating) {
 			generate_particle_counter++;
-			if(generate_particle_counter > generate_particle) {
+			if(generate_particle_counter > timeBetweenParticles) {
 				if(width > 0 && height > 0) {
 					int xx = random.nextInt(width) + (int) x;
 					int yy = random.nextInt(height) + (int) y;
@@ -94,6 +102,8 @@ public class ParticleManager {
 				generate_particle_counter = 0;
 			}
 		}
+
+		// Tick each particle
 		for(Particle particle: particles) {
 			particle.tick();
 		}
@@ -101,13 +111,13 @@ public class ParticleManager {
 	
 	private void addParticle(int x, int y) {
 		switch(type) {
-		case ELEMENT:
-			Particle particle = new ParticleElement(
+		case AMBIENT:
+			Particle particle = new ParticleAmbient(
 					this,
 					x,
 					y,
-					20,
-					particle_life)
+					particleSize,
+					particleLifeTime)
 			.setInWorld(true)
 			.setDarkness(random.nextFloat());
 			if(color != null) particle.setColor(color);
@@ -115,7 +125,7 @@ public class ParticleManager {
 			particles.add(particle);
 			break;
 		case RAIN:
-			Particle particle_rain = new ParticleRain(this, x, y, 12, particle_life)
+			Particle particle_rain = new ParticleRain(this, x, y, particleSize, particleLifeTime)
 			.setInWorld(false)
 			.setDarkness(0)
 			.setImage(Assets.rain_drop.getImage());
@@ -156,8 +166,9 @@ public class ParticleManager {
 	/**
 	 * @param generating the generating to set
 	 */
-	public void setGenerating(boolean generating) {
+	public ParticleManager setGenerating(boolean generating) {
 		this.generating = generating;
+		return this;
 	}
 
 }

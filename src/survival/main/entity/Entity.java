@@ -41,8 +41,6 @@ public abstract class Entity extends Rectangle {
 	protected BackboneVector2f pos;
 	protected Random random;
 	protected World world;
-	protected Element element;
-	protected ParticleManager particle_element_manager;
 	protected JemCollection jem_collection;
 	protected int width;
 	protected int height;
@@ -83,7 +81,6 @@ public abstract class Entity extends Rectangle {
 		this.left_up = new Point();
 		this.down_left = new Point();
 		this.down_right = new Point();
-		particle_element_manager = new ParticleManager(ParticleManagerType.ELEMENT, this, 40, 2);
 	}
 	
 	public void setBlockCollisionBounds(float xpos, float ypos, float width, float height) {
@@ -142,10 +139,7 @@ public abstract class Entity extends Rectangle {
 		}
 		return false;
 	}
-	
-	public void drawElement(Graphics2D g) {
-		particle_element_manager.render(g);
-	}
+
 	
 	public void drawSorter(Graphics2D g) {
 		g.setColor(Color.RED);
@@ -155,20 +149,7 @@ public abstract class Entity extends Rectangle {
 			g.fillRect((int) pos.getWorldLocation().xpos, (int) sort_y + getImageHeight(), getImageWidth(), 2);
 		}
 	}
-	
-	public void tickParticleElementManager() {
-		if(element != null) {			
-			particle_element_manager.setGenerating(true);
-			if(element.getImage() == null) {		
-				particle_element_manager.setColor(element.getColor());
-			} else {
-				particle_element_manager.setImage(element.getImage());
-			}
-		} else {
-			particle_element_manager.setGenerating(false);
-		}
-		particle_element_manager.tick();
-	}
+
 	
 	public abstract void tick();
 	public abstract void render(Graphics2D g);

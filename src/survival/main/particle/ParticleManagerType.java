@@ -19,8 +19,8 @@ package survival.main.particle;
  */
 
 public enum ParticleManagerType {
-	
-	ELEMENT,
+
+	AMBIENT,
 	RAIN,
 	SNOW;
 

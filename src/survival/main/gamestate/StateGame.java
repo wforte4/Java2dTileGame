@@ -39,7 +39,6 @@ public class StateGame extends BackboneGameState {
 	
 	private World world;
 	private Player player;
-	private SoundEvent backgroundNoise;
 
 	/**
 	 * @param gsm
@@ -79,6 +78,8 @@ public class StateGame extends BackboneGameState {
 	 */
 	@Override
 	public void render(Graphics2D g) {
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, Main.WIDTH, Main.HEIGHT);
 		world.render(g);
 	}
 

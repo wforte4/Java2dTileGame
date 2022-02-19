@@ -13,6 +13,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.Date;
+import java.util.Random;
 
 import backbone.engine.main.BackboneGameStateManager;
 import backbone.engine.main.BackboneImageLoader;
@@ -28,6 +29,7 @@ import survival.main.generation.World;
 import survival.main.light.Light;
 import survival.main.light.LightMap;
 import survival.main.sound.Sound;
+import survival.main.utils.Util;
 
 /**
  * File: MapWorld.java 
@@ -44,16 +46,17 @@ public class MapWorld extends World {
 	public MapWorld(BackboneGameStateManager gsm, String path) {
 		super(gsm);
 		loadMap(path);
+		for(int i = 0; i < 5; i++) {
+			entity_manager.addEntity(new CreatureSlime(this, 200, 300 + new Random().nextInt(100), 64, 64));
+		}
 	}
 
 	public void loadMap(String path) {
-		BufferedImage map = BackboneImageLoader.loadImage(path);
+		BufferedImage map = Util.loadImage(path);
 		this.width = map.getWidth();
 		this.height = map.getHeight();
-		System.out.println(height);
-		light_map = new LightMap(this, true, 30);
-		light_map.addLight(new Light(400, 400, 400, 0x000000));
-		
+		light_map = new LightMap(this, true, 64);
+
 		for(int x = 0; x < map.getWidth(); x++) {
 			for(int y = 0; y < map.getHeight(); y++) {
 				
@@ -118,7 +121,6 @@ public class MapWorld extends World {
 	public void tick() {
 		setWorldVariables(worldxpos, worldypos);
 		super.tick();
-		light_map.tick();
 	}
 	
 	/* (non-Javadoc)
@@ -127,28 +129,6 @@ public class MapWorld extends World {
 	@Override
 	public void render(Graphics2D g) {
 		super.render(g);
-		light_map.render(g);
-		renderPlayerGUI(g);
-		if(debug) {			
-			g.setColor(Color.RED);
-			for(Entity entity: entity_manager.getEntities()) {
-				entity.drawCollisionBounds(g);
-				entity.drawSorter(g);
-				entity.drawBlockCollision(g);
-			}
-			for(Jem jem: entity_manager.getJems()) {
-				g.draw(jem.getBounds());
-			}
-			menu.addLine("World X Position: " + worldxpos);
-			menu.addLine("World Y Position: " + worldypos);
-			menu.addLine("Player X: " + player.getWorld_position_fix().xpos);
-			menu.addLine("Player Y: " + player.getWorld_position_fix().ypos);
-			menu.addLine("World Block Amount: " + block_manager.getBlocks().size());
-			menu.addLine("Loaded Blocks: " + block_manager.getLoaded_blocks().size());
-			menu.addLine("Entities: " + entity_manager.getEntities().size());
-			menu.addLine("Time of Day: " + light_map.getSunlightCounter() + " / " + light_map.getMaxSunlightCounter());
-			menu.render(g);
-		}
 	}
 	
 	/* (non-Javadoc)
@@ -164,6 +144,7 @@ public class MapWorld extends World {
 	 */
 	@Override
 	public void keyPressed(int k) {
+		super.keyPressed(k);
 		getPlayer().keyPressed(k);
 		if(k == KeyEvent.VK_F10) {
 			debug = !debug;

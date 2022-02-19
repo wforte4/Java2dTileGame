@@ -36,7 +36,7 @@ public class Jem extends Rectangle {
 	private int width;
 	private int height;
 	private int value;
-	private float initialdrop_speed;
+	private float initialdropSpeed;
 	private double xx;
 	private double yy;
 	
@@ -47,17 +47,17 @@ public class Jem extends Rectangle {
 		this.height = height;
 		this.value = value;
 		this.jem_type = determineType(value);
-		this.initialdrop_speed = 4f;
+		this.initialdropSpeed = 4f;
 		this.xx = random.nextGaussian();
 		this.yy = random.nextGaussian();
 		setBounds((int) (pos.getWorldLocation().xpos - 200), (int) pos.getWorldLocation().ypos, width, height);
 	}
 	
 	public void tick() {
-		if(initialdrop_speed > 0) {			
-			pos.xpos += xx * initialdrop_speed;
-			pos.ypos += yy * initialdrop_speed;
-			initialdrop_speed -= .08f;
+		if(initialdropSpeed > 0) {
+			pos.xpos += xx * initialdropSpeed;
+			pos.ypos += yy * initialdropSpeed;
+			initialdropSpeed -= .08f;
 		}
 		setBounds((int) (pos.getWorldLocation().xpos), (int) pos.getWorldLocation().ypos, width, height);
 	}
@@ -76,7 +76,7 @@ public class Jem extends Rectangle {
 	}
 	
 	public void resetInitalDrop() {
-		initialdrop_speed = 4f;
+		initialdropSpeed = 4f;
 	}
 	
 	public void setToFollow(Entity entity, int speed) {

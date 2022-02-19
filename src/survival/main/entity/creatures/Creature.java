@@ -16,6 +16,7 @@ import backbone.engine.main.BackboneVector2f;
 import survival.main.drops.Jem;
 import survival.main.entity.Entity;
 import survival.main.generation.World;
+import survival.main.utils.Util;
 
 /**
  * File: Creature.java 
@@ -43,6 +44,7 @@ public abstract class Creature extends Entity {
 	protected float strength;
 	protected int hurtCounter;
 	protected int amountOfTimeToBeHurt = 20; // In Milliseconds
+	protected boolean showHurtAnim = false;
 
 	protected float max_speed;
 	protected float acceleration;
@@ -75,7 +77,10 @@ public abstract class Creature extends Entity {
 	protected BackboneAnimation anim_idol_right;
 	protected BackboneAnimation anim_idol_left;
 
-	protected BackboneAnimation anim_fight_left;
+	protected BackboneAnimation anim_fight_left,
+								anim_fight_right,
+								anim_fight_down,
+								anim_fight_up;
 	
 	protected BackboneSprite current_sprite;
 
@@ -88,7 +93,6 @@ public abstract class Creature extends Entity {
 	 */
 	public Creature(World world, float xpos, float ypos, int width, int height) {
 		super(world, xpos, ypos, width, height);
-		useDefaultSpeed();
 	}
 	
 	protected void useDefaultSpeed() {
@@ -99,6 +103,18 @@ public abstract class Creature extends Entity {
 		direction = DEFAULT_DIRECTION;
 		acceleration = DEFAULT_ACCELERATION;
 		max_speed = DEFAULT_MAX_SPEED;
+		peaceful_movement_change = DEFAULT_PEACEFUL_MOVEMENT_CHANGE;
+		health = fullHealth;
+	}
+
+	protected void setSpeed(float acceleration, float maxSpeed) {
+		speed_right = START_SPEED;
+		speed_left = START_SPEED;
+		speed_up = START_SPEED;
+		speed_down = START_SPEED;
+		direction = DEFAULT_DIRECTION;
+		acceleration = acceleration;
+		max_speed = maxSpeed;
 		peaceful_movement_change = DEFAULT_PEACEFUL_MOVEMENT_CHANGE;
 		health = fullHealth;
 	}
@@ -158,6 +174,21 @@ public abstract class Creature extends Entity {
 				}
 			}
 		} else {
+
+			if(direction == 0) {
+				anim_fight_up.update(System.currentTimeMillis());
+				current_sprite = anim_fight_up.getSprite();
+			}
+
+			if(direction == 1) {
+				anim_fight_right.update(System.currentTimeMillis());
+				current_sprite = anim_fight_right.getSprite();
+			}
+
+			if(direction == 2) {
+				anim_fight_down.update(System.currentTimeMillis());
+				current_sprite = anim_fight_down.getSprite();
+			}
 			if(direction == 3) {
 				anim_fight_left.update(System.currentTimeMillis());
 				current_sprite = anim_fight_left.getSprite();
@@ -166,11 +197,15 @@ public abstract class Creature extends Entity {
 	}
 	
 	protected void checkIfDamaged() {
+		showHurtAnim = false;
 		if(isHurt) {
 			hurtCounter++;
 			if(hurtCounter > amountOfTimeToBeHurt) {
 				hurtCounter = 0;
 				this.isHurt = false;
+			}
+			if(hurtCounter % 10 == 0) {
+				showHurtAnim = true;
 			}
 		}
 		if(current_state == CreatureState.FIGHTING) {
@@ -203,8 +238,22 @@ public abstract class Creature extends Entity {
 				setCurrent_state(CreatureState.PEACEFUL);
 			}
 		} else {
+			if (direction == 0 && anim_fight_up.isDone()) {
+				attacking = false;
+				anim_fight_up.reset();
+			}
+			if (direction == 1 && anim_fight_right.isDone()) {
+				attacking = false;
+				anim_fight_right.reset();
+			}
+
+			if (direction == 2 && anim_fight_down.isDone()) {
+				attacking = false;
+				anim_fight_down.reset();
+			}
 			if(direction == 3 && anim_fight_left.isDone()) {
 				attacking = false;
+				anim_fight_left.reset();
 			}
 		}
 	}
@@ -235,7 +284,7 @@ public abstract class Creature extends Entity {
 			push_left = force;
 			break;
 		default:
-			System.out.println("Not a Direction!");
+			Util.print("That is not a direction");
 			break;
 		}
 	}
@@ -265,6 +314,13 @@ public abstract class Creature extends Entity {
 		if(left) {
 			direction = 3;
 		}
+	}
+
+	public void stopMovement() {
+		speed_up = 0;
+		speed_down = 0;
+		speed_left = 0;
+		speed_right = 0;
 	}
 
 	// Controls acceleration and deceleration of Entity movement
@@ -343,10 +399,27 @@ public abstract class Creature extends Entity {
 	}
 
 	protected boolean isInPlayerDistance() {
-		if(BackboneVector2f.distanceBetweenVectors(pos, world.getPlayer().getPos()) < 20) {
+		if(BackboneVector2f.distanceBetweenVectors(pos, world.getPlayerWorldPos()) < 400) {
 			return true;
 		}
 		return false;
+	}
+
+	protected void followPlayer() {
+		if(pos.xpos < world.getPlayerWorldPos().xpos) {
+			right = true;
+			left = false;
+		} else {
+			left = true;
+			right = false;
+		}
+		if(pos.ypos < world.getPlayerWorldPos().ypos) {
+			down = true;
+			up = false;
+		} else {
+			up = true;
+			down = false;
+		}
 	}
 
 	// Set the direction to move in
@@ -405,6 +478,9 @@ public abstract class Creature extends Entity {
 		anim_idol_down.play();
 		anim_idol_left.play();
 		anim_fight_left.play();
+		anim_fight_right.play();
+		anim_fight_down.play();
+		anim_fight_up.play();
 	}
 
 	// Setting animations for the entity
@@ -443,9 +519,9 @@ public abstract class Creature extends Entity {
 		return attacking;
 	}
 
-	public void onDeath() {
+	public void onDeath() {}
 
-	}
+	public void onHit() {}
 
 	public void damageEntity(int amount, int direction, int force) {
 			if((health - amount) > 0) {

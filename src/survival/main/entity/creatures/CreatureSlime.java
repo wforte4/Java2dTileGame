@@ -16,6 +16,7 @@ import survival.main.drops.Jem;
 import survival.main.entity.element.Element;
 import survival.main.generation.World;
 import survival.main.images.Assets;
+import survival.main.utils.Util;
 
 /**
  * File: CreatureSlime.java 
@@ -39,13 +40,11 @@ public class CreatureSlime extends Creature {
 	 */
 	public CreatureSlime(World world, float xpos, float ypos, int width, int height) {
 		super(world, xpos, ypos, width, height);
+		setSpeed(.25f, 4f);
 		setAnimations(180, 4);
 		peaceful_movement = true;
 		acceleration = .1f;
 		strength = 2f;
-		if(random.nextInt(4) == 2) {
-			element = Element.APHOTICACERBIA;
-		}
 	}
 	
 	/* (non-Javadoc)
@@ -62,6 +61,10 @@ public class CreatureSlime extends Creature {
 		anim_idol_right = new BackboneAnimation(Assets.slime_idol_right, speed);
 		anim_idol_down = new BackboneAnimation(Assets.slime_idol_down, speed);
 		anim_idol_left = new BackboneAnimation(Assets.slime_idol_left, speed);
+		anim_fight_left = new BackboneAnimation(Assets.slime_idol_left, speed);
+		anim_fight_right = new BackboneAnimation(Assets.slime_idol_right, speed);
+		anim_fight_up = new BackboneAnimation(Assets.slime_idol_up, speed);
+		anim_fight_down = new BackboneAnimation(Assets.slime_idol_down, speed);
 		playAllAnimations();
 	}
 	
@@ -70,15 +73,22 @@ public class CreatureSlime extends Creature {
 	 */
 	@Override
 	public void tick() {
+		world.sound.getVolume();
 		defaultSort();
 		setSolidWorldBounds(0, 10);
 		setBlockCollisionBounds(pos.getWorldLocation().xpos, pos.getWorldLocation().ypos + bounds_height / 2, bounds_width, bounds_height / 2);
 		checkCollisions();
 		handleAnimation();
-		peacefulMovement();
 		move();
 		smoothMove();
 		checkIfDamaged();
+		if(isInPlayerDistance()) {
+			followPlayer();
+			attacking = true;
+		} else {
+			peacefulMovement();
+			attacking = false;
+		}
 	}
 	
 
@@ -101,7 +111,19 @@ public class CreatureSlime extends Creature {
 				width, 
 				height, 
 				null);
-		drawElement(g);
+
+		if(showHurtAnim) {
+			g.drawImage(Util.setImageOverlayColorRed(current_sprite.getImage()),
+					(int) (pos.getWorldLocation().xpos),
+					(int) (pos.getWorldLocation().ypos), width, height, null);
+		}
+
+	}
+
+	@Override
+	public void onHit() {
+		super.onHit();
+		world.playSoundEffect("hit", .4f);
 	}
 
 	@Override
