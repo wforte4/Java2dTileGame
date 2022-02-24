@@ -46,9 +46,9 @@ public class MapWorld extends World {
 	public MapWorld(BackboneGameStateManager gsm, String path) {
 		super(gsm);
 		loadMap(path);
-		for(int i = 0; i < 5; i++) {
-			entity_manager.addEntity(new CreatureSlime(this, 200, 300 + new Random().nextInt(100), 64, 64));
-		}
+//		for(int i = 0; i < 5; i++) {
+//			entity_manager.addEntity(new CreatureSlime(this, 200, 300 + new Random().nextInt(100), 64, 64));
+//		}
 	}
 
 	public void loadMap(String path) {

@@ -84,9 +84,7 @@ public abstract class World {
 			block_manager.tick();
 			entity_manager.tick();
 			light_map.tick();
-			sound.setVolume(settings.getVolume());
 		} else {
-			sound.setVolume(settings.getVolume() / 4);
 		}
 		gameMenu.tick();
 	}
@@ -134,11 +132,9 @@ public abstract class World {
 	public void keyPressed(int k) {
 		if(k == KeyEvent.VK_P || k == KeyEvent.VK_ESCAPE) {
 			if(isPaused) {
-				isPaused = false;
-				Util.print("Unpaused game");
+				setPaused(false);
 			} else {
-				isPaused = true;
-				Util.print("Paused game");
+				setPaused(true);
 			}
 		}
 	}
@@ -262,5 +258,14 @@ public abstract class World {
 
 	public boolean isPaused() {
 		return isPaused;
+	}
+
+	public void setPaused(boolean paused) {
+		this.isPaused = paused;
+		if(paused) {
+			sound.setVolume(settings.getVolume() / 4);
+		} else {
+			sound.setVolume(settings.getVolume());
+		}
 	}
 }
