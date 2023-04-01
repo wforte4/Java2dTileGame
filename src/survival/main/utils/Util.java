@@ -1,11 +1,10 @@
 package survival.main.utils;
 
-import backbone.engine.main.BackboneImageLoader;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 /**
  * File: Utils
