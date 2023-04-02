@@ -8,7 +8,8 @@
  */
 package survival.main.gameloop;
 
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 
 import backbone.engine.main.BackboneGameLoop;
@@ -16,7 +17,6 @@ import backbone.engine.main.BackboneGameStateManager;
 import backbone.engine.main.BackboneMouseManager;
 import backbone.engine.main.BackboneWindow;
 import survival.main.gamestate.StateGame;
-import survival.main.gamestate.StateSplash;
 import survival.main.images.Assets;
 
 /**
@@ -60,7 +60,6 @@ public class SurvivalGameLoop extends BackboneGameLoop {
 		requestFocus();
 		gsm = new BackboneGameStateManager();
 		gsm.setOrigState(new StateGame(gsm));
-
 	}
 
 	/* (non-Javadoc)

@@ -5,10 +5,9 @@
 
 package survival.main.images;
 
-import backbone.engine.main.BackboneSprite;
-import backbone.engine.main.BackboneSpriteSheet;
-
 import java.awt.image.BufferedImage;
+
+import backbone.engine.main.BackboneSprite;
 
 public class SpriteSheet {
     private BufferedImage image;
@@ -77,7 +76,7 @@ public class SpriteSheet {
     public void setSpritesSecondImage(String name, BackboneSprite[] sprites, int xStart, int yStart) {
         for(int x = 0; x < sprites.length; ++x) {
             String sprite_name = name + " " + x;
-            sprites[x].setSecond_image(this.getSprite(sprite_name, xStart + x, yStart));
+            sprites[x].setImage(this.getSprite(sprite_name, xStart + x, yStart));
         }
 
     }
